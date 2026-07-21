@@ -3,6 +3,7 @@ import mediapipe as mp
 from mediapipe.tasks import python
 from mediapipe.tasks.python import vision
 from hand_params import get_hand_params
+from smoothing import Smoother
 
 BaseOptions = python.BaseOptions
 HandLandmarker = vision.HandLandmarker
@@ -16,6 +17,7 @@ options = HandLandmarkerOptions(
 )
 
 landmarker = HandLandmarker.create_from_options(options)
+smoother = Smoother(smoothing_factor=0.3)
 
 cap = cv2.VideoCapture(0, cv2.CAP_DSHOW)
 
@@ -42,7 +44,8 @@ while True:
         h, w, _ = frame.shape
         for hand in result.hand_landmarks:
             params = get_hand_params(hand)
-            print(params)
+            smoothed_params = smoother.update_dict(params)
+            print(smoothed_params)
             for landmark in hand:
                 x = int(landmark.x * w)
                 y = int(landmark.y * h)
