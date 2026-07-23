@@ -2,6 +2,7 @@ import customtkinter as ctk
 import subprocess
 from tkinter import filedialog, Canvas
 from handwaft_screen import HandwaftScreen
+from dj_screen import DJScreen
 
 ctk.set_appearance_mode("dark")
 
@@ -23,7 +24,9 @@ def launch_dj_mode():
         filetypes=[("Audio files", "*.wav")]
     )
     if file_path:
-        subprocess.Popen(["py", "dj_mode.py", file_path])
+        for widget in main_frame.winfo_children():
+            widget.destroy()
+        DJScreen(main_frame, show_home, file_path)
 
 def launch_spotify_mode():
     subprocess.Popen(["py", "spotify_mode.py"])
@@ -53,9 +56,9 @@ def draw_gradient_bg(canvas, width, height, color_top, color_bottom):
         canvas.create_rectangle(0, y0, width, y1, fill=color, outline="")
 
 def build_home_screen():
-    canvas = Canvas(main_frame, width=560, height=760, highlightthickness=0, bd=0)
+    canvas = Canvas(main_frame, width=700, height=800, highlightthickness=0, bd=0)
     canvas.place(x=0, y=0)
-    draw_gradient_bg(canvas, 560, 760, "#0a0e16", "#0d1420")
+    draw_gradient_bg(canvas, 700, 800, "#0a0e16", "#0d1420")
 
     content = ctk.CTkFrame(main_frame, fg_color="transparent")
     content.place(relx=0.5, rely=0, anchor="n", y=45)
@@ -94,7 +97,7 @@ def build_home_screen():
     cards_frame.pack()
 
     dj_card = ctk.CTkFrame(cards_frame, fg_color=CARD_BG, corner_radius=18,
-                             border_width=1, border_color=CARD_BORDER, width=210, height=130)
+                             border_width=1, border_color=CARD_BORDER, width=210, height=170)
     dj_card.grid(row=0, column=0, padx=8)
     dj_card.pack_propagate(False)
     dj_card.grid_propagate(False)
@@ -109,7 +112,7 @@ def build_home_screen():
                    command=launch_dj_mode).pack()
 
     spotify_card = ctk.CTkFrame(cards_frame, fg_color=CARD_BG, corner_radius=18,
-                                  border_width=1, border_color=CARD_BORDER, width=210, height=130)
+                                  border_width=1, border_color=CARD_BORDER, width=210, height=170)
     spotify_card.grid(row=0, column=1, padx=8)
     spotify_card.pack_propagate(False)
     spotify_card.grid_propagate(False)
@@ -131,9 +134,9 @@ def build_home_screen():
     gestures_link.pack(pady=(30, 0))
 
 def build_gestures_screen():
-    canvas = Canvas(main_frame, width=560, height=760, highlightthickness=0, bd=0)
+    canvas = Canvas(main_frame, width=700, height=800, highlightthickness=0, bd=0)
     canvas.place(x=0, y=0)
-    draw_gradient_bg(canvas, 560, 760, "#0a0e16", "#0d1420")
+    draw_gradient_bg(canvas, 700, 800, "#0a0e16", "#0d1420")
 
     content = ctk.CTkFrame(main_frame, fg_color="transparent")
     content.place(relx=0.5, rely=0, anchor="n", y=30)
@@ -200,4 +203,4 @@ main_frame.pack(fill="both", expand=True)
 
 build_home_screen()
 
-root.mainloop()
+root.mainloop() 
